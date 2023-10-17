@@ -12,7 +12,6 @@ import java.util.List;
 public interface JobTitleRepository extends JpaRepository<JobTitle, Long> {
     List<JobTitle> findByTitleContaining(String title);
 
-
     List<JobTitle> findByDepartmentId(Long id);
 
 
