@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,6 +67,7 @@ public class EmployeeController {
 //
 //    }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/employees/departments/{department_id}")
     public ResponseEntity<List<Employee>> getAllEmployeesByDepartmentId(@PathVariable Long department_id){
 
@@ -103,7 +105,7 @@ public class EmployeeController {
             return employeeRepository.save(employeeDetails);
         });
         if(employee.isEmpty()){
-            throw new EmployeeNotFoundException("No Job Title was found with ID: "+ job_title_id);
+            throw new ResourceNotFoundException("No Job Title was found with ID: "+ job_title_id);
         }
         Employee newEmployee = employee.get();
         log.info("New Employee Added:\n" + newEmployee);
@@ -113,6 +115,7 @@ public class EmployeeController {
     }
 
     // get employee by id rest api
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/employees/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {//?@PathVariable("id") Long id
 
@@ -167,6 +170,7 @@ public class EmployeeController {
     }
 
     // delete employee rest api
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/employees/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Long id){
         Employee employee = employeeRepository.findById(id)

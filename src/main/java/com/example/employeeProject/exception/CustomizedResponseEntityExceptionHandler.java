@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import lombok.extern.log4j.Log4j2;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +22,32 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Log4j2
 @RestControllerAdvice
 public class CustomizedResponseEntityExceptionHandler {
+
+//    @ExceptionHandler({ AuthenticationException.class })
+//    public final ResponseEntity<ExceptionResponse> handleAuth(Exception exception,
+//                                                                       WebRequest request) {
+//        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), exception.getMessage(),
+//                request.getDescription(false),HttpStatus.BAD_REQUEST,HttpStatus.BAD_REQUEST.value());
+//        log.warn(exceptionResponse);
+//        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+//    }
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception exception,
                                                                        WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), exception.getMessage(),
-                request.getDescription(false),HttpStatus.INTERNAL_SERVER_ERROR,HttpStatus.INTERNAL_SERVER_ERROR.value());
+                request.getDescription(false),HttpStatus.BAD_REQUEST,HttpStatus.BAD_REQUEST.value());
+        log.warn(exceptionResponse);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleAllExceptions(ResourceNotFoundException exception,
+                                                                       WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), exception.getMessage(),
+                request.getDescription(false),HttpStatus.BAD_REQUEST,HttpStatus.BAD_REQUEST.value());
         log.warn(exceptionResponse);
 
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EmployeeNotFoundException.class)
@@ -36,6 +55,17 @@ public class CustomizedResponseEntityExceptionHandler {
                                                                                WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),
                 employeeNotFoundException.getMessage(),
+                request.getDescription(false),HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value());
+        log.warn(exceptionResponse);
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsE.class)
+    public final ResponseEntity<ExceptionResponse> handleUserNotFoundExceptionn(BadCredentialsE e,
+                                                                               WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),
+                e.getMessage(),
                 request.getDescription(false),HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value());
         log.warn(exceptionResponse);
 

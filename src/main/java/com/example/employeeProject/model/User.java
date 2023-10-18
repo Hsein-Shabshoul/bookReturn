@@ -26,6 +26,8 @@ public class User implements UserDetails {
     private Integer id;
     private String firstname;
     private String lastname;
+    @Column(unique = true)
+    @Email(message = "Needs to be a valid Email")
     private String email;
     private String password;
 

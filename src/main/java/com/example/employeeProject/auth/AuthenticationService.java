@@ -2,14 +2,18 @@ package com.example.employeeProject.auth;
 
 
 import com.example.employeeProject.config.JwtService;
+import com.example.employeeProject.exception.BadCredentialsE;
 import com.example.employeeProject.exception.EmployeeNotFoundException;
 import com.example.employeeProject.exception.ResourceNotFoundException;
 import com.example.employeeProject.model.Role;
 import com.example.employeeProject.model.User;
 import com.example.employeeProject.repository.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +30,11 @@ public class AuthenticationService {
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                //.role(Role.USER)
+                .role(Role.ROLE_ADMIN)
                 .build();
         repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(user,user.getRole().name());
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
@@ -40,9 +45,14 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        var user = repository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found "));
-        var jwtToken = jwtService.generateToken(user);
+        User user = null;
+        try {
+            user = repository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new BadCredentialsE("User not found "));
+        } catch (BadCredentialsE e) {
+            throw new RuntimeException(e);
+        }
+        var jwtToken = jwtService.generateToken(user,user.getRole().name());
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 }
