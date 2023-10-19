@@ -52,6 +52,7 @@ public class AuthenticationService {
         } catch (BadCredentialsE e) {
             throw new RuntimeException(e);
         }
+
         var jwtToken = jwtService.generateToken(user,user.getRole().name());
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
