@@ -3,10 +3,14 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.websocket.AuthenticationException;
+import org.springframework.core.Constants;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,10 +37,20 @@ public class CustomizedResponseEntityExceptionHandler {
         log.warn(exceptionResponse);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
-
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public final ResponseEntity<ExceptionResponse> handleNotFoundExceptions(ResourceNotFoundException exception,
+    //interpolated message in e.getConstraintViolations
+@ExceptionHandler(ConstraintViolationException.class)
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+ValidationErrorResponse onNotValidException(ConstraintViolationException e) {
+    ValidationErrorResponse error = new ValidationErrorResponse();
+    Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
+    for (ConstraintViolation<?> fieldError : constraintViolations) {
+        error.getViolations().add(new Violation(fieldError.getInvalidValue().toString(), fieldError.getMessage()));
+    }
+    log.info(error);
+    return error;
+}
+@ExceptionHandler(ResourceNotFoundException.class)
+public final ResponseEntity<ExceptionResponse> handleNotFoundExceptions(ResourceNotFoundException exception,
                                                                        WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), exception.getMessage(),
                 request.getDescription(false),HttpStatus.BAD_REQUEST,HttpStatus.BAD_REQUEST.value());

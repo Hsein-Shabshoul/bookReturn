@@ -75,7 +75,7 @@ public class JobTitleController {
                 .body(jobTitle);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/job_titles/title/{title}")
     public ResponseEntity<List<JobTitle>> getJobByTitleContaining(@PathVariable String title) {
         List<JobTitle> jobTitle = jobTitleRepository.findByTitleContaining(title);
