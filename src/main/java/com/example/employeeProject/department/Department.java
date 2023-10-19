@@ -1,4 +1,4 @@
-package com.example.employeeProject.model;
+package com.example.employeeProject.department;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

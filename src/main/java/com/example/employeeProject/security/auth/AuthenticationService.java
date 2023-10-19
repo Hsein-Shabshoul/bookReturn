@@ -1,19 +1,14 @@
-package com.example.employeeProject.auth;
+package com.example.employeeProject.security.auth;
 
 
-import com.example.employeeProject.config.JwtService;
+import com.example.employeeProject.security.config.JwtService;
 import com.example.employeeProject.exception.BadCredentialsE;
-import com.example.employeeProject.exception.EmployeeNotFoundException;
-import com.example.employeeProject.exception.ResourceNotFoundException;
-import com.example.employeeProject.model.Role;
-import com.example.employeeProject.model.User;
-import com.example.employeeProject.repository.UserRepository;
-import jakarta.validation.Valid;
+import com.example.employeeProject.security.Role;
+import com.example.employeeProject.security.User;
+import com.example.employeeProject.security.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

@@ -1,5 +1,6 @@
-package com.example.employeeProject.model;
+package com.example.employeeProject.security;
 
+import com.example.employeeProject.security.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;

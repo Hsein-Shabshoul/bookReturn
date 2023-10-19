@@ -1,24 +1,22 @@
-package com.example.employeeProject.controller;
+package com.example.employeeProject.employee;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import com.example.employeeProject.exception.EmployeeNotFoundException;
-import com.example.employeeProject.model.JobTitle;
-import com.example.employeeProject.repository.DepartmentRepository;
-import com.example.employeeProject.repository.JobTitleRepository;
+import com.example.employeeProject.department.DepartmentRepository;
+import com.example.employeeProject.jobTitle.JobTitleRepository;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.employeeProject.exception.ResourceNotFoundException;
-import com.example.employeeProject.model.Employee;
-import com.example.employeeProject.repository.EmployeeRepository;
+import com.example.employeeProject.employee.Employee;
+import com.example.employeeProject.employee.EmployeeRepository;
 @Log4j2
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController

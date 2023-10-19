@@ -1,4 +1,4 @@
-package com.example.employeeProject.config;
+package com.example.employeeProject.security.config;
 
 import com.example.employeeProject.exception.CustomAuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;

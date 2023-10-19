@@ -1,4 +1,4 @@
-package com.example.employeeProject.model;
+package com.example.employeeProject.security;
 
 public enum Role {
     ROLE_USER,

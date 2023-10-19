@@ -1,4 +1,5 @@
-package com.example.employeeProject.model;
+package com.example.employeeProject.employee;
+import com.example.employeeProject.jobTitle.JobTitle;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

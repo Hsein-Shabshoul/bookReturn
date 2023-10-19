@@ -1,9 +1,8 @@
-package com.example.employeeProject.controller;
+package com.example.employeeProject.department;
 import com.example.employeeProject.exception.EmployeeNotFoundException;
 import com.example.employeeProject.exception.ResourceNotFoundException;
-import com.example.employeeProject.model.Department;
-import com.example.employeeProject.model.JobTitle;
-import com.example.employeeProject.repository.DepartmentRepository;
+import com.example.employeeProject.department.Department;
+import com.example.employeeProject.department.DepartmentRepository;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;

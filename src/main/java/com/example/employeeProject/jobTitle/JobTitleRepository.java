@@ -1,9 +1,8 @@
-package com.example.employeeProject.repository;
+package com.example.employeeProject.jobTitle;
 
 
-import com.example.employeeProject.model.JobTitle;
+import com.example.employeeProject.jobTitle.JobTitle;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

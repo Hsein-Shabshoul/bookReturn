@@ -1,4 +1,4 @@
-package com.example.employeeProject.auth;
+package com.example.employeeProject.security.auth;
 
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;

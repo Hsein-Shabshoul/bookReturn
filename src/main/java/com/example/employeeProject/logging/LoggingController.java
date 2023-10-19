@@ -1,4 +1,4 @@
-package com.example.employeeProject.controller;
+package com.example.employeeProject.logging;
 
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
