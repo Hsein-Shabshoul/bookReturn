@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "employees")
-public class Employee {
+public class Employee implements java.io.Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

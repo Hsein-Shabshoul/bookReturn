@@ -35,7 +35,6 @@ public class AuthenticationService {
         String jwtToken = jwtService.generateToken(user,user.getRole().name());
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
-
     public @NotBlank(message = "Name can not be blank") String registerWithRole(RegisterRequestWithRole request) throws BadCredentialsE {
         var user = User.builder()
                 .firstname(request.getFirstname())
