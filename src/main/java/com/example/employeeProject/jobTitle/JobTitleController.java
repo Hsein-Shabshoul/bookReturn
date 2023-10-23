@@ -23,6 +23,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/")
 public class JobTitleController {
+    @Autowired
+    private JobTitleService jobTitleService;
 
     @Autowired
     private JobTitleRepository jobTitleRepository;
@@ -31,81 +33,41 @@ public class JobTitleController {
     private DepartmentRepository departmentRepository;
 
     @GetMapping("/job_titles")
-    public List<JobTitle> getAllJobTitles(){
-        log.info("Requested All job titles.");
-        return jobTitleRepository.findAll();
+    public ResponseEntity<List<JobTitle>> getAllJobTitles(){
+        return ResponseEntity.ok(jobTitleService.getAllJobTitles());
     }
     @PostMapping("/job_titles")
-    public JobTitle createJobTitle(@Valid @RequestBody JobTitle jobTitle){
-        JobTitle newJobTitle = jobTitleRepository.save(jobTitle);
-        log.info("New Job Title Added:\n{}", newJobTitle);
-        return newJobTitle;
+    public ResponseEntity<JobTitle> createJobTitle(@Valid @RequestBody JobTitle jobTitle){
+        return ResponseEntity.ok(jobTitleService.createJobTitle(jobTitle));
     }
     @PostMapping("/job_titles/departments/{department_id}")
     public ResponseEntity<JobTitle> createJobTitleWithDepartment(@PathVariable Long department_id,
                                                                  @RequestBody JobTitle jobTitleDetails){
-        JobTitle jobTitle = departmentRepository.findById(department_id).map(department -> {
-            jobTitleDetails.setDepartment(department);
-            return jobTitleRepository.save(jobTitleDetails);
-        }).orElseThrow(() -> new EmployeeNotFoundException("No Department was found with ID: " + department_id));
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(jobTitle);
+        return ResponseEntity.ok(jobTitleService.createJobTitleWithDepartment(department_id,jobTitleDetails));
     }
     @GetMapping("/job_titles/departments/{department_id}")
     public ResponseEntity<List<JobTitle>> getAllJobTitlesByDepartmentId(@PathVariable Long department_id){
-        if(!departmentRepository.existsById(department_id)){
-            throw new EmployeeNotFoundException("No Department was found with ID="+department_id);
-        }
-        List<JobTitle> jobTitles = jobTitleRepository.findByDepartmentId(department_id);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(jobTitles);
+        return ResponseEntity.ok(jobTitleService.getAllJobTitlesByDepartmentId(department_id));
     }
 
     @GetMapping("/job_titles/{id}")
     public ResponseEntity<JobTitle> getJobTitleById(@PathVariable Long id) {
-
-        JobTitle jobTitle= jobTitleRepository.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException("No JobTitle was found with ID: " + id));
-        log.info("Requested JobTitle with id=" + id + ".\n" + jobTitle);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(jobTitle);
+        return ResponseEntity.ok(jobTitleService.getJobTitleById(id));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/job_titles/title/{title}")
     public ResponseEntity<List<JobTitle>> getJobByTitleContaining(@PathVariable String title) {
-        List<JobTitle> jobTitle = jobTitleRepository.findByTitleContaining(title);
-        log.info("Job Titles containing " + title + "\n" + jobTitle);
-        return ResponseEntity.ok(jobTitle);
+        return ResponseEntity.ok(jobTitleService.getJobByTitleContaining(title));
     }
 
     @PutMapping("/job_titles/{id}")
     public ResponseEntity<JobTitle> updateJobTitle(@PathVariable Long id, @RequestBody JobTitle jobTitleDetails){
-        JobTitle jobTitle = jobTitleRepository.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException("No Employee was found to edit with ID: " + id));
-        jobTitle.setTitle(jobTitleDetails.getTitle());
-        jobTitle.setDescription(jobTitleDetails.getDescription());
-
-        JobTitle updatedJob = jobTitleRepository.save(jobTitle);
-        log.info("Updated Job title with id={}\n{}", id, updatedJob);
-        return ResponseEntity.ok(updatedJob);
+        return ResponseEntity.ok(jobTitleService.updateJobTitle(id,jobTitleDetails));
     }
 
     @DeleteMapping("/job_titles/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteJobTitle(@PathVariable Long id){
-        JobTitle jobTitle = jobTitleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No Job Title was found to delete with ID: " + id));
-
-        jobTitleRepository.delete(jobTitle);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        log.info("Deleted Job Title with id={}\nDeleted details were: {}",id, jobTitle);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(jobTitleService.deleteJobTitle(id));
     }
-
-
 }
