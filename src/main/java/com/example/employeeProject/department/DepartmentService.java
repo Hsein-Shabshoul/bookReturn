@@ -6,6 +6,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ import java.util.Map;
 @Service
 @Log4j2
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "departmentCache")
 public class DepartmentService {
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -30,6 +34,9 @@ public class DepartmentService {
         log.info("Requested Department with ID="+id);
         return department;
     }
+    //public static final String KEY = "cacheKey";
+    //@Cacheable(value = "departmentCache", key = "#root.target.KEY")
+    @Cacheable(key = "#name")
     public List<Department> getDepartmentByTitleContaining(String name){
         List<Department> department = departmentRepository.findByNameContaining(name);
         log.info("Departments containing " + name + "\n" + department);
@@ -49,6 +56,7 @@ public class DepartmentService {
         log.info("Updated Department with id={}\n{}",id,updatedDepartment);
         return updatedDepartment;
     }
+    @CacheEvict()
     public Map<String, Boolean> deleteDepartment( Long id){
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No Department was found to delete with ID: " + id));

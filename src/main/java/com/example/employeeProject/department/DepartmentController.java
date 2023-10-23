@@ -46,7 +46,4 @@ public class DepartmentController {
     public ResponseEntity<Map<String, Boolean>> deleteDepartment(@PathVariable Long id){
         return ResponseEntity.ok(departmentService.deleteDepartment(id));
     }
-
-
-
 }
