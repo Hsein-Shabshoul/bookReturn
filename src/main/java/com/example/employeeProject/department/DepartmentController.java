@@ -1,16 +1,11 @@
 package com.example.employeeProject.department;
-import com.example.employeeProject.exception.EmployeeNotFoundException;
-import com.example.employeeProject.exception.ResourceNotFoundException;
-import com.example.employeeProject.department.Department;
-import com.example.employeeProject.department.DepartmentRepository;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +14,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/")
 public class DepartmentController {
+
     @Autowired
     private DepartmentService departmentService;
+    private final RabbitTemplate rabbitTemplate;
+    public DepartmentController(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
+
     @GetMapping("/departments")
     public ResponseEntity<List<Department>> getAllDepartments(){
         log.info("Requested All Department names");
@@ -28,7 +29,12 @@ public class DepartmentController {
     }
     @GetMapping("/departments/{id}")
     public ResponseEntity<Department> getDepartmentById(@PathVariable Long id) {
-        return ResponseEntity.ok(departmentService.getDepartmentById(id));
+        Department department = departmentService.getDepartmentById(id);
+        //Dep dep = new Dep();
+        //dep.setName(department.getName());
+        //dep.setDescription(department.getDescription());
+        rabbitTemplate.convertAndSend("","q.department-findById",department);
+        return ResponseEntity.ok(department);
     }
     @GetMapping("/departments/name/{name}")
     public ResponseEntity<List<Department>> getDepartmentByTitleContaining(@PathVariable String name){

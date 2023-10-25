@@ -2,11 +2,11 @@ package com.example.employeeProject.department;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "departments")
 public class Department implements java.io.Serializable{
@@ -21,12 +21,10 @@ public class Department implements java.io.Serializable{
     @Column(name = "description")
     private String description;
 
-    public Department(){}
-
-    public Department(String name, String description){
-        super();
-        this.name = name;
-        this.description = description;
-    }
+//    public Department(String name, String description){
+//        super();
+//        this.name = name;
+//        this.description = description;
+//    }
 }
 

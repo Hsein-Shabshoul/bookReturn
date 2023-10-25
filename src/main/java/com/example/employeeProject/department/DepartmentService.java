@@ -5,6 +5,7 @@ import com.example.employeeProject.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -19,11 +20,17 @@ import java.util.List;
 import java.util.Map;
 @Service
 @Log4j2
-@RequiredArgsConstructor
+
 @CacheConfig(cacheNames = "departmentCache")
 public class DepartmentService {
     @Autowired
     private DepartmentRepository departmentRepository;
+
+//    private final RabbitTemplate rabbitTemplate;
+//    public DepartmentService(RabbitTemplate rabbitTemplate) {
+//        this.rabbitTemplate = rabbitTemplate;
+//    }
+
     public List<Department> getAllDepartments(){
         log.info("Requested All Department names");
         return departmentRepository.findAll();
@@ -32,6 +39,7 @@ public class DepartmentService {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("No Department was found with ID: "+id));
         log.info("Requested Department with ID="+id);
+        //rabbitTemplate.convertAndSend("","q.department-findById",department);
         return department;
     }
     //public static final String KEY = "cacheKey";
