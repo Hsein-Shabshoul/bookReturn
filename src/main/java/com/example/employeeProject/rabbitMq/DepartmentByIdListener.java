@@ -1,8 +1,6 @@
 package com.example.employeeProject.rabbitMq;
 
-import com.example.employeeProject.department.Dep;
 import com.example.employeeProject.department.Department;
-import com.example.employeeProject.department.DepartmentService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;

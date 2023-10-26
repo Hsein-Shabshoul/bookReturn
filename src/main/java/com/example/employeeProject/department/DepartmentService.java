@@ -25,11 +25,11 @@ import java.util.Map;
 public class DepartmentService {
     @Autowired
     private DepartmentRepository departmentRepository;
+    private final RabbitTemplate rabbitTemplate;
 
-//    private final RabbitTemplate rabbitTemplate;
-//    public DepartmentService(RabbitTemplate rabbitTemplate) {
-//        this.rabbitTemplate = rabbitTemplate;
-//    }
+    public DepartmentService(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
 
     public List<Department> getAllDepartments(){
         log.info("Requested All Department names");
@@ -39,7 +39,7 @@ public class DepartmentService {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("No Department was found with ID: "+id));
         log.info("Requested Department with ID="+id);
-        //rabbitTemplate.convertAndSend("","q.department-findById",department);
+        rabbitTemplate.convertAndSend("","q.department-findById",department);
         return department;
     }
     //public static final String KEY = "cacheKey";

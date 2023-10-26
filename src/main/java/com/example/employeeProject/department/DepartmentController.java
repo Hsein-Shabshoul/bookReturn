@@ -17,10 +17,6 @@ public class DepartmentController {
 
     @Autowired
     private DepartmentService departmentService;
-    private final RabbitTemplate rabbitTemplate;
-    public DepartmentController(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
-    }
 
     @GetMapping("/departments")
     public ResponseEntity<List<Department>> getAllDepartments(){
@@ -30,10 +26,7 @@ public class DepartmentController {
     @GetMapping("/departments/{id}")
     public ResponseEntity<Department> getDepartmentById(@PathVariable Long id) {
         Department department = departmentService.getDepartmentById(id);
-        //Dep dep = new Dep();
-        //dep.setName(department.getName());
-        //dep.setDescription(department.getDescription());
-        rabbitTemplate.convertAndSend("","q.department-findById",department);
+        //rabbitTemplate.convertAndSend("","q.department-findById",department);
         return ResponseEntity.ok(department);
     }
     @GetMapping("/departments/name/{name}")
