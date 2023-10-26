@@ -2,6 +2,8 @@ package com.example.employeeProject.department;
 
 import com.example.employeeProject.exception.EmployeeNotFoundException;
 import com.example.employeeProject.exception.ResourceNotFoundException;
+import com.example.employeeProject.rabbitMq.RabbitMQConfig;
+import com.example.employeeProject.rabbitMq.RabbitMQConfig.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,16 +22,17 @@ import java.util.List;
 import java.util.Map;
 @Service
 @Log4j2
-
+@RequiredArgsConstructor
 @CacheConfig(cacheNames = "departmentCache")
 public class DepartmentService {
     @Autowired
     private DepartmentRepository departmentRepository;
-    private final RabbitTemplate rabbitTemplate;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
-    public DepartmentService(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
-    }
+//    public DepartmentService(RabbitTemplate rabbitTemplate) {
+//        this.rabbitTemplate = rabbitTemplate;
+//    }
 
     public List<Department> getAllDepartments(){
         log.info("Requested All Department names");
@@ -39,7 +42,7 @@ public class DepartmentService {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("No Department was found with ID: "+id));
         log.info("Requested Department with ID="+id);
-        rabbitTemplate.convertAndSend("","q.department-findById",department);
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_DEPARTMENT_DIRECT,RabbitMQConfig.ROUTING_KEY_DEPARTMENT_FIND,department);
         return department;
     }
     //public static final String KEY = "cacheKey";

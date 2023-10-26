@@ -26,7 +26,6 @@ public class DepartmentController {
     @GetMapping("/departments/{id}")
     public ResponseEntity<Department> getDepartmentById(@PathVariable Long id) {
         Department department = departmentService.getDepartmentById(id);
-        //rabbitTemplate.convertAndSend("","q.department-findById",department);
         return ResponseEntity.ok(department);
     }
     @GetMapping("/departments/name/{name}")

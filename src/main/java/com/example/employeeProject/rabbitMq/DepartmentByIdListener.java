@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 public class DepartmentByIdListener {
-    @RabbitListener(queues = "q.department-findById")
+    @RabbitListener(queues = "q.department.findById")
     public void onDepFindById(Department event) {
         log.info("Find Department By ID Event Received: {}", event);
     }
