@@ -68,7 +68,7 @@ public class DepartmentService {
         return updatedDepartment;
     }
     @CacheEvict()
-    public Map<String, Boolean> deleteDepartment( Long id){
+    public Map<String, Boolean> deleteDepartment(Long id){
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No Department was found to delete with ID: " + id));
         departmentRepository.delete(department);
