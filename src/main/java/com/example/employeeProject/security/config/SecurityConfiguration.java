@@ -33,7 +33,7 @@ public class SecurityConfiguration extends GlobalMethodSecurityConfiguration {
 //                .hasRole("ADMIN")
 //                .requestMatchers("/api/v1/employees/job_titles/**")
 //                .hasRole("USER")
-                .requestMatchers("/api/v1/auth/**")
+                .requestMatchers("/api/v1/auth/**","/swagger-ui/**","/v3/api-docs/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
