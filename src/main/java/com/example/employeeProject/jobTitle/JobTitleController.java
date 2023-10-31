@@ -1,6 +1,4 @@
 package com.example.employeeProject.jobTitle;
-
-
 import com.example.employeeProject.exception.EmployeeNotFoundException;
 import com.example.employeeProject.exception.ResourceNotFoundException;
 import com.example.employeeProject.jobTitle.JobTitle;
@@ -13,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,13 +21,10 @@ import java.util.Map;
 public class JobTitleController {
     @Autowired
     private JobTitleService jobTitleService;
-
     @Autowired
     private JobTitleRepository jobTitleRepository;
-
     @Autowired
     private DepartmentRepository departmentRepository;
-
     @GetMapping("/job_titles")
     public ResponseEntity<List<JobTitle>> getAllJobTitles(){
         return ResponseEntity.ok(jobTitleService.getAllJobTitles());

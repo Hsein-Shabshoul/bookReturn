@@ -30,10 +30,6 @@ public class DepartmentService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-//    public DepartmentService(RabbitTemplate rabbitTemplate) {
-//        this.rabbitTemplate = rabbitTemplate;
-//    }
-
     public List<Department> getAllDepartments(){
         log.info("Requested All Department names");
         return departmentRepository.findAll();
@@ -45,8 +41,6 @@ public class DepartmentService {
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_DEPARTMENT_DIRECT,RabbitMQConfig.ROUTING_KEY_DEPARTMENT_FIND,department);
         return department;
     }
-    //public static final String KEY = "cacheKey";
-    //@Cacheable(value = "departmentCache", key = "#root.target.KEY")
     @Cacheable(key = "#name")
     public List<Department> getDepartmentByTitleContaining(String name){
         List<Department> department = departmentRepository.findByNameContaining(name);

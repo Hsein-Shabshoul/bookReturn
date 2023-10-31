@@ -3,7 +3,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
 
@@ -14,15 +13,10 @@ public class DepartmentController {
 
     @Autowired
     private DepartmentService departmentService;
-
-//    @GetMapping("/departments")
-//    public ResponseEntity<List<Department>> getAllDepartments(){
-//        return ResponseEntity.ok(departmentService.getAllDepartments());
-//    }
-@GetMapping("/departments")
-public List<Department> getAllDepartments(){
-    return departmentService.getAllDepartments();
-}
+    @GetMapping("/departments")
+    public ResponseEntity<List<Department>> getAllDepartments(){
+        return ResponseEntity.ok(departmentService.getAllDepartments());
+    }
     @GetMapping("/departments/{id}")
     public ResponseEntity<Department> getDepartmentById(@PathVariable Long id) {
         Department department = departmentService.getDepartmentById(id);

@@ -3,16 +3,10 @@ package com.example.employeeProject.jobTitle;
 import com.example.employeeProject.department.DepartmentRepository;
 import com.example.employeeProject.exception.EmployeeNotFoundException;
 import com.example.employeeProject.exception.ResourceNotFoundException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,8 +72,4 @@ public class JobTitleService {
         log.info("Deleted Job Title with id={}\nDeleted details were: {}",id, jobTitle);
         return response;
     }
-
-
-
-
 }
