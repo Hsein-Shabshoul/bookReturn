@@ -68,7 +68,7 @@ public class BookReturnListener {
         Double roundedResult = Double.parseDouble(new DecimalFormat("#.###").format(averageDays));
         user.setAverageReturn(roundedResult);
         userRepository.save(user);
-        log.info("Average time for book return for user {} is: {} days" ,user.getEmail(),roundedResult);
+        log.info("Average time for book return for user {} is: {} days" ,reservation.getUser_email(),roundedResult);
 
     }
 }

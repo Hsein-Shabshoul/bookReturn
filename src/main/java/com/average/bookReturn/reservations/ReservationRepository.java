@@ -1,17 +1,11 @@
 package com.average.bookReturn.reservations;
-
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
-import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     Optional<List<Reservation>> findByUserId(Long id);
-    Optional<List<Reservation>> findByUserIdAndBookId(Long userId, Long bookId);
+//    Optional<List<Reservation>> findByUserIdAndBookId(Long userId, Long bookId);
 
 //works
 //    @Query("SELECT r FROM Reservation r WHERE r.user.id = :userId")
@@ -30,7 +24,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //        }
 //        return totalDurationInSeconds / (86400.0 * reservations.size());
 //    }
-
 
     //did not work
     //    @Query("SELECT AVG(CAST(DATE_PART('day', r.returnDatetime - r.reservationDatetime)) FROM Reservation r WHERE r.user_id = :userId")

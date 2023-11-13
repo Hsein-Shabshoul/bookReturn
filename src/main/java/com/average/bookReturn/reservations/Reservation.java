@@ -1,12 +1,9 @@
 package com.average.bookReturn.reservations;
-
-import com.average.bookReturn.books.Book;
 import com.average.bookReturn.users.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -26,10 +23,6 @@ public class Reservation implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "book_id", nullable = false)
-    private Book book;
 
     @Column(name = "reservation_datetime")
     private LocalDateTime reservationDatetime;
