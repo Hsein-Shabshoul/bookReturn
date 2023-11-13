@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -22,36 +21,32 @@ public class BookReturnListener {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
 
-    public long calculateReservationDurationInHours(Reservation reservation) {
-        LocalDateTime reservationDatetime = reservation.getReservationDatetime();
-        LocalDateTime returnDatetime = reservation.getReturnDatetime();
-
-        if (reservationDatetime != null && returnDatetime != null) {
-            Duration duration = Duration.between(reservationDatetime, returnDatetime);
-            return duration.toHours();
-        }
-        return 0;
-    }
-    public Double calculateAverageDurationForUser(Long userId) {
-        Optional<List<Reservation>> reservationsOptional = reservationRepository.findByUserId(userId);
-
+    public Double calculateAverageDurationForUser(User user, Reservation thisReservation) {
+        Optional<List<Reservation>> reservationsOptional = reservationRepository.findByUserId(user.getId());
         if (reservationsOptional.isEmpty()) {
             return null;
         }
         List<Reservation> reservations = reservationsOptional.get();
         long totalDurationInSeconds = 0;
-
         //getting reservations where return date is not null
         List<Reservation> reservationsWithReturnDatetime = reservations
                 .stream()
                 .filter(reservation -> reservation.getReturnDatetime() != null)
                 .toList();
-
-        for (Reservation reservation : reservationsWithReturnDatetime) {
-            Duration duration = Duration.between(reservation.getReservationDatetime(), reservation.getReturnDatetime());
-            totalDurationInSeconds += duration.getSeconds();
+        //if an average already existed, skip recalculating and just adjust it according to the new reservation
+        if (user.getAverageReturn() != null) {
+            Duration duration = Duration.ofDays(Duration.between(thisReservation.getReservationDatetime(), thisReservation.getReturnDatetime()).toDays());
+            double totalDays = (user.getAverageReturn() * (reservationsWithReturnDatetime.size() - 1)) + duration.toDays();
+            double newAverage = totalDays / reservationsWithReturnDatetime.size();
+            return newAverage;
         }
-        return totalDurationInSeconds / (86400.0 * reservationsWithReturnDatetime.size());
+        else {
+            for (Reservation reservation : reservationsWithReturnDatetime) {
+                Duration duration = Duration.between(reservation.getReservationDatetime(), reservation.getReturnDatetime());
+                totalDurationInSeconds += duration.getSeconds();
+            }
+            return totalDurationInSeconds / (86400.0 * reservationsWithReturnDatetime.size());
+        }
     }
     @RabbitListener(queues = "q.average.bookReturn")
     public void onBookReturn(Long reservation_id) {
@@ -63,12 +58,10 @@ public class BookReturnListener {
         }
         Reservation reservation = reservationOptional.get();
         User user = reservation.getUser();
-
-        Double averageDays = calculateAverageDurationForUser(user.getId());
+        Double averageDays = calculateAverageDurationForUser(user, reservation);
         Double roundedResult = Double.parseDouble(new DecimalFormat("#.###").format(averageDays));
         user.setAverageReturn(roundedResult);
         userRepository.save(user);
-        log.info("Average time for book return for user {} is: {} days" ,reservation.getUser_email(),roundedResult);
-
+        log.info("Average time for book return for user {} is: {} days", reservation.getUser_email(), roundedResult);
     }
 }
